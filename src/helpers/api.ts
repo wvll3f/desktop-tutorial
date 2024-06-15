@@ -25,7 +25,6 @@ export function TRANS_POST(body: Object, token: string) {
         },
     };
 }
-
 export function GET_USER(token: String) {
     return {
         url: URL_API + '/user',
@@ -37,7 +36,6 @@ export function GET_USER(token: String) {
         },
     };
 }
-
 export function POTS_USER(body: Object) {
     return {
         url: URL_API + '/register',
@@ -50,7 +48,6 @@ export function POTS_USER(body: Object) {
         },
     };
 }
-
 export function GET_TRANS(token: String) {
     return {
         url: URL_API + '/trans',
@@ -73,10 +70,22 @@ export function GET_TRANS_ID(token: String, id: number) {
         },
     };
 }
-
+export function EDIT_TRANS_ID(token: String, id: number, body:Object) {
+    return {
+        url: URL_API + '/trans/'+ id,
+        option: {
+            method: 'PATCH',
+            headers: {
+                authorization: 'Bearer ' + token,
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(body),
+        },
+    };
+}
 export function DELETE_TRANS_ID(token: String, id: number) {
     return {
-        url: URL_API + '/trans' + '/' + id,
+        url: URL_API + '/trash/' + id,
         option: {
             method: 'DELETE',
             headers: {
@@ -85,7 +94,6 @@ export function DELETE_TRANS_ID(token: String, id: number) {
         },
     };
 }
-
 export function GET_BALANCE(token: string) {
     return {
         url: URL_API + '/balance',

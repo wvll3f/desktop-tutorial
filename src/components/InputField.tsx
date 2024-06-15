@@ -7,18 +7,16 @@ import { UserContext } from '@/context/UserStorage'
 import { responseMetodostype } from '@/types/userTypes'
 
 function InputField() {
-    const {criarTrans, pegarBalanco, pegarMetodos, pegarCategorias } = React.useContext(UserContext);
+    const { criarTrans, pegarBalanco, pegarMetodos, pegarCategorias,balance, setBalance } = React.useContext(UserContext);
     const description = useForm();
     const price = useForm();
-    
-    const [balance, setBalance] = React.useState<number>(0);
     const [metodo, setMetodo] = React.useState<Array<string>>([]);
     const [categList, setCategList] = React.useState<Array<string>>([]);
 
     const [type, setType] = React.useState('');
     const [category, setCategory] = React.useState('');
     const [metodoPagemento, setMetodoPagamento] = React.useState('');
-    
+
     const tipoList = ['E', 'S'];
     const metodosList = ['Tipo Pagamento'];
     const categoriaList = ['Categoria'];
@@ -43,23 +41,17 @@ function InputField() {
             }
         }
     }
-    async function getBalance() {
-        const token = window.localStorage.getItem('accessToken')
-        if (token) {
-            let response: any = await pegarBalanco(token);
-            response ? setBalance(response) : setBalance(0);
-        }
-    }
+
     async function handleSubmit(event: any) {
         event.preventDefault();
-        const token = window.localStorage.getItem('accessToken')
+        const token = window.localStorage.getItem('accessToken') ?? "";
         if (token) {
             console.log(description.value, price.value, category, type, metodoPagemento);
             if (description.validate() && price.validate() && category) {
                 criarTrans(description.value, price.value, category, type, metodoPagemento, token);
             }
         }
-        getBalance()
+        setBalance(await pegarBalanco(token))
         description.setValue('')
         price.setValue('')
         setCategory('')
@@ -69,9 +61,13 @@ function InputField() {
     }
 
     React.useEffect(() => {
-        getCategorias();
-        getBalance();
-        getMetodos();
+        const token = window.localStorage.getItem('accessToken') ?? "";
+        const load = async () =>{
+            setBalance(await pegarBalanco(token))
+            await getCategorias()
+            await getMetodos()
+        }
+        load()
     }, [])
 
     return (
@@ -80,24 +76,24 @@ function InputField() {
             <Input label="Preço" type="number" name="price" {...price} />
 
             <select className='h-10 rounded-md p-2' value={category} onChange={(e) => setCategory(e.target.value)}>
-                {categList.map((tipo: string) => (
-                    <option key={tipo} value={tipo}>
+                {categList.map((tipo: string, id: number) => (
+                    <option key={id} value={tipo}>
                         {tipo}
                     </option>
                 ))}
             </select>
 
             <select className='h-10 rounded-md p-2' value={metodoPagemento} onChange={(e) => setMetodoPagamento(e.target.value)}>
-                {metodo.map((tipo: string) => (
-                    <option key={tipo} value={tipo}>
+                {metodo.map((tipo: string, id: number) => (
+                    <option key={id} value={tipo}>
                         {tipo}
                     </option>
                 ))}
             </select>
             <select className='h-10 rounded-md p-2' value={type} onChange={(e) => setType(e.target.value)}>
                 <option value="">Tipo transação</option>
-                {tipoList.map((tipo: string) => (
-                    <option key={tipo} value={tipo}>
+                {tipoList.map((tipo: string, id: number) => (
+                    <option key={id} value={tipo}>
                         {tipo}
                     </option>
                 ))}

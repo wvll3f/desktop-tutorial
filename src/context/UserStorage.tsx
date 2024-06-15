@@ -6,31 +6,34 @@ import { dadosType } from '@/types/userTypes';
 interface UserStorageProps {
   children: ReactNode;
 };
-
 interface UserContextProps {
   userLogin: (username: string, password: string) => void;
-  userTrans: (token: string) => object;
+  userTrans: (token: string) => any;
   pegarBalanco: (token: string) => any;
   pegarMetodos: (token: string) => any;
   pegarCategorias: (token: string) => any;
   criarTrans: (description: string, price: number, category: string, type: string, token: string, metodoPagamento: string) => void;
-  deletarCategoriasId:(token:string, id:number) => void;
-  pegarCategoriasId:(token: string, id:number) => any;
+  deletarCategoriasId: (token: string, id: number) => void;
+  pegarCategoriasId: (token: string, id: number) => any;
+  setBalance: React.Dispatch<React.SetStateAction<number>>;
+  editTrans: (description: string, price: number, category: string, type: string, token: string, metodoPagamento: string) => void;
+  logado: boolean;
+  balance: number;
   data: {
     username: string;
     roles: string;
-  } | null;
+  };
 };
 
 export const UserContext = React.createContext<UserContextProps>({} as UserContextProps);
 export const UserStorage: React.FC<UserStorageProps> = ({ children }) => {
 
-  
-  const [data, setData] = React.useState(null);
   // @ts-ignore
   const [login, setLogin] = React.useState<boolean>(false);
+  const [data, setData] = React.useState({ username: 'Login/Criar', roles: '' });
+  const [logado, setLogado] = React.useState(false);
+  const [balance, setBalance] = React.useState(0);
   const navigate = useNavigate();
-
 
   async function getUser(token: string) {
     const { url, option } = GET_USER(token);
@@ -42,10 +45,9 @@ export const UserStorage: React.FC<UserStorageProps> = ({ children }) => {
       navigate('/')
     }
   }
-
   React.useEffect(() => {
     async function autoLogin() {
-      const token = window.localStorage.getItem('accessToken')
+      const token = window.localStorage.getItem('accessToken') ?? "";
       if (token) {
         // @ts-ignore
         const response = getUser(token)
@@ -53,6 +55,7 @@ export const UserStorage: React.FC<UserStorageProps> = ({ children }) => {
             navigate('/login')
           })
       }
+      pegarBalanco(token);
     }
     autoLogin();
   }, [])
@@ -64,28 +67,30 @@ export const UserStorage: React.FC<UserStorageProps> = ({ children }) => {
     window.localStorage.setItem('accessToken', json.accessToken);
     getUser(json.accessToken)
     if (response.status === 200) {
+      setLogado(true)
       navigate('/')
     }
   }
-
   async function userTrans(token: string): Promise<dadosType> {
     const { url, option } = GET_TRANS(token);
     const response = await fetch(url, option);
+    if (response.status !== 200) {
+      navigate('/login')
+    }
     const json = await response.json();
     return json as dadosType;
   }
-
-  async function criarTrans(description: string, price: number, category: string, type: string, metodoPagamento:string, token: string) {
+  async function criarTrans(description: string, price: number, category: string, type: string, metodoPagamento: string, token: string) {
     const { url, option } = TRANS_POST({ description, price, category, type, metodoPagamento }, token);
     // @ts-ignore
     const response = await fetch(url, option);
   }
-
   async function pegarBalanco(token: string) {
     const { url, option } = GET_BALANCE(token);
     const response = await fetch(url, option);
     const json = await response.json();
     if (json) {
+      setBalance(json)
       return json.toFixed(2) as number;
     } else {
       return null
@@ -111,7 +116,7 @@ export const UserStorage: React.FC<UserStorageProps> = ({ children }) => {
       return null
     }
   }
-  async function pegarCategoriasId(token: string, id:number) {
+  async function pegarCategoriasId(token: string, id: number) {
     const { url, option } = GET_TRANS_ID(token, id);
     const response = await fetch(url, option);
     const json = await response.json();
@@ -121,22 +126,34 @@ export const UserStorage: React.FC<UserStorageProps> = ({ children }) => {
       return null
     }
   }
-  async function deletarCategoriasId(token: string, id:number) {
+  async function deletarCategoriasId(token: string, id: number) {
     const { url, option } = DELETE_TRANS_ID(token, id);
     // @ts-ignore
     const response = await fetch(url, option);
   }
-
+  async function editTrans(description: string, price: number, category: string, type: string, metodoPagamento: string, token: string) {
+    if (description && price && category && type && metodoPagamento && token) {
+      const { url, option } = TRANS_POST({ description, price, category, type, metodoPagamento }, token);
+      const response = await fetch(url, option);
+    }
+    // @ts-ignore
+  }
   return (
-    <UserContext.Provider value={{ userLogin, 
-                                  userTrans, 
-                                  criarTrans, 
-                                  pegarBalanco,
-                                  pegarMetodos,
-                                  pegarCategorias,
-                                  deletarCategoriasId,
-                                  pegarCategoriasId, 
-                                  data }} >
+    <UserContext.Provider value={{
+      userLogin,
+      userTrans,
+      criarTrans,
+      pegarBalanco,
+      pegarMetodos,
+      pegarCategorias,
+      deletarCategoriasId,
+      pegarCategoriasId,
+      editTrans,
+      setBalance,
+      logado,
+      balance,
+      data
+    }} >
       {children}
     </UserContext.Provider>)
 }
