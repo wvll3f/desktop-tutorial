@@ -9,6 +9,7 @@ import picFinance from '../../assets/picFinance.jpg'
 function Login() {
   const username = useForm();
   const password = useForm();
+  //@ts-ignore
   const { userLogin, logado } = React.useContext(UserContext);
 
   async function handleSubmit(event: any) {

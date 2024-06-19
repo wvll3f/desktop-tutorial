@@ -1,13 +1,11 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import { Link} from 'react-router-dom'
 import { UserStorage, UserContext } from '../context/UserStorage';
 import { LogOut } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
 
 function Header() {
 
   const { data } = React.useContext(UserContext);
-  const navigate = useNavigate();
 
   function logout(){
     window.localStorage.setItem('accessToken', '') 
