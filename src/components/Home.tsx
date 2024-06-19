@@ -1,30 +1,36 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from './ui/table';
-import Input from './Input';
-import { dadosType } from '../types/userTypes'
+import { dadosExemplo, dadosType } from '../types/userTypes'
 import { UserContext } from '@/context/UserStorage';
-import useForm from '@/hooks/useForm';
 import InputField from './InputField';
 import { Pen, Trash } from 'lucide-react';
-import { Button } from './ui/button';
 import Modal from './Modal';
+import { Card, CardDescription, CardTitle } from './ui/card';
 
 function Home() {
 
-  const { userTrans, deletarCategoriasId, pegarBalanco, setBalance } = React.useContext(UserContext);
+  const { dadosRetorno, setDadosretorno, userTrans, pegarTransacaoId, deletarTransacaoId, pegarBalanco, balance, setBalance, pegarEntradas, pegarSaidas, inflows, outflows, setInflows, setOutflows } = React.useContext(UserContext);
   const [dados, setDados] = React.useState<dadosType>();
   const [deleteModal, setDeleteModal] = React.useState(false);
   const [editModal, setEditModal] = React.useState(false);
-  const [selecionado, setSelecionado] = React.useState<number | null>();
-  const buscar = useForm();
+  const [selecionado, setSelecionado] = React.useState<number>(156484651894);
 
   async function removeRow(id: number) {
     const token = window.localStorage.getItem('accessToken');
-    if (token) {
-      let response: any = await deletarCategoriasId(token, id);
+    if (token && selecionado !== 156484651894) {
+      let response: any = await deletarTransacaoId(token, id);
       console.log(response)
-      setSelecionado(null);
+      setSelecionado(156484651894);
       setDeleteModal(false);
+    }
+  }
+  async function editRow(id: number) {
+    const token = window.localStorage.getItem('accessToken');
+    if (token && selecionado !== 156484651894) {
+      let response: any = await deletarTransacaoId(token, id);
+      console.log(response)
+      setSelecionado(156484651894);
+      setEditModal(false);
     }
   }
 
@@ -33,56 +39,61 @@ function Home() {
     const load = async () => {
       setDados(await userTrans(token));
       setBalance(await pegarBalanco(token))
+      setInflows(await pegarEntradas(token))
+      setOutflows(await pegarSaidas(token))
     }
     load()
   }, [dados])
 
+
   return (
     <div>
-      <Modal open={deleteModal} onClose={() => setDeleteModal(false)}>
-        <div className='space-x-2 space-y-3 flex flex-col p-3'>
-          <h1 className='text-center font-bold text-3xl'> Excluir?</h1>
-          <p>Tem certeza que deseja deletar a linha selecionada?</p>
-          <Button variant='destructive' onClick={(e) => {
-            e.stopPropagation()
-            if (selecionado) removeRow(selecionado)
-          }}>
-            Sim
-          </Button>
+      <Modal
+        selecionado={selecionado}
+        type='excluir'
+        open={deleteModal}
+        onClose={() => setDeleteModal(false)}
+        action={removeRow}
+      />
 
-          <Button onClick={
-            (e) => {
-              e.stopPropagation()
-              setDeleteModal(false)
+      <Modal
+        selecionado={selecionado}
+        type='editar'
+        open={editModal}
+        onClose={() => {setEditModal(false) 
+          setDadosretorno(dadosExemplo)
+        }}
+      action={editRow}
+      dados={dadosRetorno && dadosRetorno}
+      />
+
+      <div className='m-auto rounded-md w-3/4 bg-gray-100'>
+
+        <div className='flex justify-center space-x-5 mb-6'>
+          <Card className=' w-1/6 flex flex-col justify-center items-center p-3'>
+            <CardTitle>Entradas</CardTitle>
+            {
+              inflows && <CardDescription className='text-2xl text-blue-500' >R$ {inflows}</CardDescription>
             }
-          }>Não</Button>
-        </div>
-      </Modal >
-      <Modal open={editModal} onClose={() => setEditModal(false)}>
-        <div className='space-x-2 space-y-3 flex flex-col p-3'>
-          <h1 className='text-center font-bold text-3xl'> Editar</h1>
-          
-          <Button variant='destructive' onClick={(e) => {
-            e.stopPropagation()
-          }}>
-            Sim
-          </Button>
-
-          <Button onClick={
-            (e) => {
-              e.stopPropagation()
-              setEditModal(false)
+          </Card>
+          <Card className=' w-1/6 flex flex-col justify-center items-center p-3'>
+            <CardTitle>Saidas</CardTitle>
+            {
+              outflows && <CardDescription className='text-2xl text-orange-500' >R$ {outflows}</CardDescription>
             }
-          }>Não</Button>
+          </Card>
+          <Card className=' w-1/6 flex flex-col justify-center items-center p-3'>
+            <CardTitle>Balanço</CardTitle>
+            {
+              balance < 0
+                ? <CardDescription className='text-2xl text-red-500' >R$ {balance}</CardDescription>
+                : <CardDescription className='text-2xl text-green-500' >R$ {balance}</CardDescription>
+            }
+          </Card>
         </div>
-      </Modal >
 
-      <div className='m-auto rounded-md w-2/3 bg-gray-100'>
-        <InputField />
-
+        <InputField id={selecionado} tipo='criar' />
         <div className='space-y-2'>
-          <Input label="Buscar" type="text" name="busca" {...buscar}></Input>
-
           <Table className='text-md p-3 border-solid border-2 border-gray-300'>
             <TableCaption className='m-5 text-md font-bold' >Lista de transaçoes</TableCaption>
             <TableHeader className='w-7'>
@@ -114,9 +125,14 @@ function Home() {
                         }}
                         />
                         <Pen onClick={() => {
-                          setEditModal(true)
-                          setSelecionado(dados.id)
-                        }} 
+                          const token = window.localStorage.getItem('accessToken') ?? "";
+                          const load = async () => {
+                            setEditModal(true)
+                            setSelecionado(dados.id)
+                            if (setDadosretorno) setDadosretorno(await pegarTransacaoId(token, dados.id))
+                          }
+                          load()
+                        }}
                         />
                       </TableCell>
                     </TableRow>

@@ -74,7 +74,7 @@ export function EDIT_TRANS_ID(token: String, id: number, body:Object) {
     return {
         url: URL_API + '/trans/'+ id,
         option: {
-            method: 'PATCH',
+            method: 'PUT',
             headers: {
                 authorization: 'Bearer ' + token,
                 'Content-Type': 'application/json',
@@ -97,6 +97,28 @@ export function DELETE_TRANS_ID(token: String, id: number) {
 export function GET_BALANCE(token: string) {
     return {
         url: URL_API + '/balance',
+        option: {
+            method: 'GET',
+            headers: {
+                authorization: 'Bearer ' + token,
+            },
+        },
+    };
+}
+export function GET_OUTFLOWS(token: string) {
+    return {
+        url: URL_API + '/outflows',
+        option: {
+            method: 'GET',
+            headers: {
+                authorization: 'Bearer ' + token,
+            },
+        },
+    };
+}
+export function GET_INFLOWS(token: string) {
+    return {
+        url: URL_API + '/inflows',
         option: {
             method: 'GET',
             headers: {

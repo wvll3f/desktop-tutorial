@@ -29,3 +29,10 @@ export type responseMetodostype = {
   id: number;
   name: string;
 }
+
+export const dadosExemplo = {
+  description: '',
+  price: 0,
+  category: 0,
+  type: '',
+}

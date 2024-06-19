@@ -10,7 +10,7 @@ function App() {
 
   return (
     <UserStorage>
-      <div className='flex justify-between flex-col h-screen bg-gray-100'>
+      <div className='flex w-screen justify-between flex-col h-screen bg-gray-100'>
         <Header />
         <Routes>
           <Route path="/" element={<Home />} />

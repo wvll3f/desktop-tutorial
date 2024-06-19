@@ -1,13 +1,22 @@
-import React from 'react'
 import { Button } from './ui/button';
+import InputField from './InputField';
+import { dadosInput } from '@/types/userTypes';
+import { UserContext } from '@/context/UserStorage';
+import React from 'react';
 
 interface modalType {
     open: boolean;
     onClose: () => void;
-    children: any;
+    type: string;
+    action?: (id: number) => void;
+    selecionado: number;
+    dados?:dadosInput;
 }
 
-function Modal({ open, onClose, children }: modalType) {
+function Modal({ type, open, onClose, action, selecionado }: modalType) {
+
+    const { dadosRetorno } = React.useContext(UserContext);
+
     return (
         <div onClick={onClose}
             className={`fixed z-10 inset-0 flex justify-center items-center transition-colors
@@ -19,7 +28,51 @@ function Modal({ open, onClose, children }: modalType) {
                 ${open ? "scale-100 opacity-100" : "scale-125 opacity-0"}`}
             >
                 <Button variant='outline' onClick={onClose} className='fixed top-2 border-none right-2 rounded-xl'>X</Button>
-                {children}
+                <div className='space-x-2 space-y-3 flex flex-col p-3 items-end'>
+                    {
+                        type == 'editar'
+                            ?
+                            <div className='space-y-3 flex flex-col p-3 items-start gap-1'>
+                                <h3 className='text-center font-bold text-xl'> Deseja editar essa transação?</h3>
+                                <InputField id={selecionado} dados={dadosRetorno && dadosRetorno} tipo='editar' />
+                            </div>
+                            :
+                            <div className='space-y-3 flex flex-col p-2 items-start gap-1'>
+                                <h3 className='text-center font-bold text-xl'> Deseja excluir essa transação?</h3>
+                                <p>Tem certeza que deseja deletar a linha selecionada?</p>
+                            </div>
+                    }
+
+                    {
+                        type == 'editar' ?
+                            <div className={"flex h-full justify-center space-x-2"}>
+
+                                <Button onClick={
+                                    (e) => {
+                                        e.stopPropagation()
+                                        onClose()
+                                    }
+                                }>Cancelar</Button>
+                            </div>
+                            :
+                            <div className="flex justify-end space-x-2">
+
+                                <Button variant='destructive' onClick={(e) => {
+                                    e.stopPropagation()
+                                    if (selecionado && action) action(selecionado)
+                                }}>
+                                    Continue
+                                </Button>
+
+                                <Button onClick={
+                                    (e) => {
+                                        e.stopPropagation()
+                                        onClose()
+                                    }
+                                }>Cancelar</Button>
+                            </div>
+                    }
+                </div>
             </div>
         </div>
     )
