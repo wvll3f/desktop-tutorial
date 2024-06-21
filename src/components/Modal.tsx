@@ -1,6 +1,6 @@
 import { Button } from './ui/button';
 import InputField from './InputField';
-import { dadosInput } from '@/types/userTypes';
+import { dadosInputField } from '@/types/userTypes';
 import { UserContext } from '@/context/UserStorage';
 import React from 'react';
 
@@ -10,7 +10,7 @@ interface modalType {
     type: string;
     action?: (id: number) => void;
     selecionado: number;
-    dados?:dadosInput;
+    dados?:dadosInputField;
 }
 
 function Modal({ type, open, onClose, action, selecionado }: modalType) {

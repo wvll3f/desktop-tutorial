@@ -1,7 +1,7 @@
 import React, { ReactNode } from 'react'
 import { GET_USER, TOKEN_POST, GET_TRANS, TRANS_POST, GET_BALANCE, GET_METODOSPAGAMENTO, GET_CATEGORIAS, GET_TRANS_ID, DELETE_TRANS_ID, GET_INFLOWS, GET_OUTFLOWS, EDIT_TRANS_ID } from '../helpers/api';
 import { useNavigate } from 'react-router-dom';
-import { dadosInput, dadosType } from '@/types/userTypes';
+import { dadosInput, dadosInputField, dadosType } from '@/types/userTypes';
 
 interface UserStorageProps {
   children: ReactNode;
@@ -20,13 +20,13 @@ interface UserContextProps {
   setBalance: React.Dispatch<React.SetStateAction<number>>;
   setInflows: React.Dispatch<React.SetStateAction<number>>;
   setOutflows: React.Dispatch<React.SetStateAction<number>>;
-  setDadosretorno: React.Dispatch<React.SetStateAction<dadosInput>>;
+  setDadosretorno: React.Dispatch<React.SetStateAction<dadosInputField>>;
   editTrans: (description: string, price: number, category: string, type: string, token: string, metodoPagamento: string, id:number) => void;
   logado: boolean;
   balance: number;
   inflows: number;
   outflows: number;
-  dadosRetorno?:dadosInput;
+  dadosRetorno?:dadosInputField;
   data: {
     username: string;
     roles: string;
@@ -43,7 +43,7 @@ export const UserStorage: React.FC<UserStorageProps> = ({ children }) => {
   const [balance, setBalance] = React.useState(0);
   const [inflows, setInflows] = React.useState(0);
   const [outflows, setOutflows] = React.useState(0);
-  const [dadosRetorno, setDadosretorno] = React.useState({} as dadosInput);
+  const [dadosRetorno, setDadosretorno] = React.useState({} as dadosInputField);
   const navigate = useNavigate();
 
   async function getUser(token: string) {
@@ -102,7 +102,7 @@ export const UserStorage: React.FC<UserStorageProps> = ({ children }) => {
     const json = await response.json();
     if (json) {
       setBalance(json)
-      return json.toFixed(2) as number;
+      return json as number;
     } else {
       return null
     }
@@ -113,7 +113,7 @@ export const UserStorage: React.FC<UserStorageProps> = ({ children }) => {
     const json = await response.json();
     if (json) {
       setInflows(json)
-      return json.toFixed(2) as number;
+      return json as number;
     } else {
       return null
     }
@@ -124,7 +124,7 @@ export const UserStorage: React.FC<UserStorageProps> = ({ children }) => {
     const json = await response.json();
     if (json) {
       setOutflows(json)
-      return json.toFixed(2) as number;
+      return json as number;
     } else {
       return null
     }
@@ -168,6 +168,7 @@ export const UserStorage: React.FC<UserStorageProps> = ({ children }) => {
     if (description && price && category && type && metodoPagamento && token) {
       // const body = { description, price, category, type, metodoPagamento }
       const { url, option } = EDIT_TRANS_ID( token, id, { description , price , category , type , metodoPagamento } );
+      console.log(option+' ' + url)
       // @ts-ignore
       const response = await fetch(url, option);
     }

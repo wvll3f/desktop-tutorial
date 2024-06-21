@@ -3,12 +3,12 @@ import Input from './Input'
 import { Button } from './ui/button'
 import useForm from '@/hooks/useForm'
 import { UserContext } from '@/context/UserStorage'
-import { dadosExemplo, dadosInput, responseMetodostype } from '@/types/userTypes'
+import { dadosExemplo, dadosInputField, responseMetodostype } from '@/types/userTypes'
 
 interface InputFieldProps {
     id: number;
     tipo: string;
-    dados?:dadosInput;
+    dados?: dadosInputField;
 }
 
 function InputField({ id, tipo, dados }: InputFieldProps) {
@@ -46,15 +46,15 @@ function InputField({ id, tipo, dados }: InputFieldProps) {
             }
         }
     }
+
     async function handleSubmit(event: any) {
         event.preventDefault();
         const token = window.localStorage.getItem('accessToken') ?? "";
 
-        if (token && id != 156484651894 && tipo == 'criar') {
+        if (token && id == 156484651894 && tipo != 'editar') {
 
             console.log(description.value, price.value, category, type, metodoPagemento);
             if (description.validate() && price.validate() && category) {
-
                 criarTrans(description.value, price.value, category, type, metodoPagemento, token);
             }
             setBalance(await pegarBalanco(token))
@@ -64,9 +64,10 @@ function InputField({ id, tipo, dados }: InputFieldProps) {
             setMetodoPagamento('')
             setType('')
             setCategory('');
+
         }
 
-        if (token && id != 156484651894 && tipo === 'editar' && dados) {
+        if (token && id != 156484651894 && tipo == 'editar') {
 
             editTrans(description.value, price.value, category, type, metodoPagemento, token, id);
 
@@ -77,7 +78,7 @@ function InputField({ id, tipo, dados }: InputFieldProps) {
             setMetodoPagamento('')
             setType('')
             setCategory('');
-            if(setDadosretorno) setDadosretorno(dadosExemplo)
+            if (setDadosretorno) setDadosretorno(dadosExemplo)
         }
 
     }
@@ -92,12 +93,16 @@ function InputField({ id, tipo, dados }: InputFieldProps) {
         load()
     }, [])
 
-    React.useEffect(()=>{
-        if(dadosRetorno){
+    React.useEffect(() => {
+        if (dadosRetorno) {
             price.setValue(dadosRetorno.price)
             description.setValue(dadosRetorno.description)
+            setCategory(dadosRetorno.category)
+            setMetodoPagamento(dadosRetorno.metodoPagamento)
+            setType(dadosRetorno.type)
+            
         }
-    },[dadosRetorno])
+    }, [dadosRetorno])
 
     return (
         <form className={`${tipo != "editar" ? 'flex justify-center items-center space-x-8 mb-2' :

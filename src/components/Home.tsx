@@ -64,30 +64,30 @@ function Home() {
           setDadosretorno(dadosExemplo)
         }}
       action={editRow}
-      dados={dadosRetorno && dadosRetorno}
+        dados={dadosRetorno && dadosRetorno}
       />
 
       <div className='m-auto rounded-md w-3/4 bg-gray-100'>
 
         <div className='flex justify-center space-x-5 mb-6'>
-          <Card className=' w-1/6 flex flex-col justify-center items-center p-3'>
+           <Card className=' w-1/6 flex flex-col justify-center items-center p-3'>
             <CardTitle>Entradas</CardTitle>
             {
-              inflows && <CardDescription className='text-2xl text-blue-500' >R$ {inflows}</CardDescription>
+              inflows && <CardDescription className='text-2xl text-blue-500' >R$ {inflows.toFixed(2)}</CardDescription>
             }
           </Card>
           <Card className=' w-1/6 flex flex-col justify-center items-center p-3'>
             <CardTitle>Saidas</CardTitle>
             {
-              outflows && <CardDescription className='text-2xl text-orange-500' >R$ {outflows}</CardDescription>
+              outflows && <CardDescription className='text-2xl text-orange-500' >R$ {outflows.toFixed(2)}</CardDescription>
             }
           </Card>
           <Card className=' w-1/6 flex flex-col justify-center items-center p-3'>
             <CardTitle>Balanço</CardTitle>
             {
               balance < 0
-                ? <CardDescription className='text-2xl text-red-500' >R$ {balance}</CardDescription>
-                : <CardDescription className='text-2xl text-green-500' >R$ {balance}</CardDescription>
+                ? <CardDescription className='text-2xl text-red-500' >R$ {balance.toFixed(2)}</CardDescription>
+                : <CardDescription className='text-2xl text-green-500' >R$ {balance.toFixed(2)}</CardDescription>
             }
           </Card>
         </div>

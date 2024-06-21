@@ -16,6 +16,13 @@ export type dadosInput = {
   category: number;
   type: String;
 };
+export type dadosInputField = {
+  description: string;
+  price: number;
+  category: string;
+  type: string;
+  metodoPagamento:string;
+};
 
 export type bodyTransacaoType = {
   description: string;
@@ -33,6 +40,7 @@ export type responseMetodostype = {
 export const dadosExemplo = {
   description: '',
   price: 0,
-  category: 0,
+  category: '',
   type: '',
+  metodoPagamento:'',
 }

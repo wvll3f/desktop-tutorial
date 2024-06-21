@@ -74,7 +74,7 @@ export function EDIT_TRANS_ID(token: String, id: number, body:Object) {
     return {
         url: URL_API + '/trans/'+ id,
         option: {
-            method: 'PUT',
+            method: 'PATCH',
             headers: {
                 authorization: 'Bearer ' + token,
                 'Content-Type': 'application/json',
