@@ -9,7 +9,7 @@ import { Card, CardDescription, CardTitle } from './ui/card';
 
 function Home() {
 
-  const { dadosRetorno, setDadosretorno, userTrans, pegarTransacaoId, deletarTransacaoId, pegarBalanco, balance, setBalance, pegarEntradas, pegarSaidas, inflows, outflows, setInflows, setOutflows } = React.useContext(UserContext);
+  const { setTipo, dadosRetorno, setDadosretorno, userTrans, pegarTransacaoId, deletarTransacaoId, pegarBalanco, balance, setBalance, pegarEntradas, pegarSaidas, inflows, outflows, setInflows, setOutflows } = React.useContext(UserContext);
   const [dados, setDados] = React.useState<dadosType>();
   const [deleteModal, setDeleteModal] = React.useState(false);
   const [editModal, setEditModal] = React.useState(false);
@@ -18,8 +18,8 @@ function Home() {
   async function removeRow(id: number) {
     const token = window.localStorage.getItem('accessToken');
     if (token && selecionado !== 156484651894) {
+      // @ts-ignore
       let response: any = await deletarTransacaoId(token, id);
-      console.log(response)
       setSelecionado(156484651894);
       setDeleteModal(false);
     }
@@ -27,10 +27,11 @@ function Home() {
   async function editRow(id: number) {
     const token = window.localStorage.getItem('accessToken');
     if (token && selecionado !== 156484651894) {
-      let response: any = await deletarTransacaoId(token, id);
-      console.log(response)
+      //@ts-ignore
+      let response = await deletarTransacaoId(token, id);
       setSelecionado(156484651894);
       setEditModal(false);
+      setTipo('criar')
     }
   }
 
@@ -61,9 +62,9 @@ function Home() {
         type='editar'
         open={editModal}
         onClose={() => {setEditModal(false) 
-          setDadosretorno(dadosExemplo)
+        setDadosretorno(dadosExemplo)
         }}
-      action={editRow}
+        action={editRow}
         dados={dadosRetorno && dadosRetorno}
       />
 
@@ -94,10 +95,10 @@ function Home() {
 
         <InputField id={selecionado} tipo='criar' />
         <div className='space-y-2'>
-          <Table className='text-md p-3 border-solid border-2 border-gray-300'>
-            <TableCaption className='m-5 text-md font-bold' >Lista de transaçoes</TableCaption>
-            <TableHeader className='w-7'>
-              <TableRow className='w-7'>
+          <Table className='text-md border-solid border-2 border-gray-300'>
+            <TableCaption className='text-md font-bold' >Lista de transaçoes</TableCaption>
+            <TableHeader className=''>
+              <TableRow className=''>
                 <TableHead className="text-center">Data</TableHead>
                 <TableHead className="text-center">Descriçao</TableHead>
                 <TableHead className="text-center">Valor</TableHead>
@@ -111,7 +112,7 @@ function Home() {
               dados.map((dados) => {
                 return (
                   <TableBody key={dados.id}>
-                    <TableRow key={dados.id} className='w-5'>
+                    <TableRow key={dados.id} className=''>
                       <TableCell className="font-medium text-center"> {dados.createTimeStamp} </TableCell>
                       <TableCell className="font-medium text-center"> {dados.description} </TableCell>
                       <TableCell className="font-medium text-center"> R$ {dados.price.toFixed(2)} </TableCell>

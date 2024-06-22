@@ -72,9 +72,9 @@ export function GET_TRANS_ID(token: String, id: number) {
 }
 export function EDIT_TRANS_ID(token: String, id: number, body:Object) {
     return {
-        url: URL_API + '/trans/'+ id,
+        url: URL_API + '/updatetrans/'+ id,
         option: {
-            method: 'PATCH',
+            method: 'PUT',
             headers: {
                 authorization: 'Bearer ' + token,
                 'Content-Type': 'application/json',

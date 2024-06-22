@@ -1,10 +1,10 @@
 import React from 'react'
 
 interface InputProps {
-  name: string;
-  type: string;
-  value: string;
-  label: string;
+  name: string | "";
+  type: string | "";
+  value: string | "";
+  label: string | "";
   onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
   error?: string;
   onBlur?: (event: React.ChangeEvent<HTMLInputElement>) => void;
@@ -15,7 +15,6 @@ const Input: React.FC<InputProps> = ({ name, type, value, label, onChange, error
 
   return (
     <div className='space-y-2' >
-
       <label className='block text-sm font-medium text-gray-800'>
         {label}
       </label>

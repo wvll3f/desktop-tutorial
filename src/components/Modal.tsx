@@ -10,17 +10,25 @@ interface modalType {
     type: string;
     action?: (id: number) => void;
     selecionado: number;
-    dados?:dadosInputField;
+    dados?: dadosInputField;
 }
 
 function Modal({ type, open, onClose, action, selecionado }: modalType) {
 
-    const { dadosRetorno } = React.useContext(UserContext);
+    const { tipo,setTipo, dadosRetorno } = React.useContext(UserContext);
+
+    React.useEffect(()=>{
+        if(open === true){
+            setTipo('editar')
+        }else{
+            setTipo('criar')
+        }
+    },[open])
 
     return (
         <div onClick={onClose}
             className={`fixed z-10 inset-0 flex justify-center items-center transition-colors
-                ${open ? "visible bg-black/20" : " invisible"}`}
+                ${open ? "visible bg-black/90" : " invisible"}`}
         >
             <div
                 onClick={(e) => e.stopPropagation()}
@@ -34,7 +42,7 @@ function Modal({ type, open, onClose, action, selecionado }: modalType) {
                             ?
                             <div className='space-y-3 flex flex-col p-3 items-start gap-1'>
                                 <h3 className='text-center font-bold text-xl'> Deseja editar essa transação?</h3>
-                                <InputField id={selecionado} dados={dadosRetorno && dadosRetorno} tipo='editar' />
+                                <InputField id={selecionado} dados={dadosRetorno && dadosRetorno} tipo={tipo}></InputField>
                             </div>
                             :
                             <div className='space-y-3 flex flex-col p-2 items-start gap-1'>

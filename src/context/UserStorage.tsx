@@ -1,7 +1,7 @@
 import React, { ReactNode } from 'react'
 import { GET_USER, TOKEN_POST, GET_TRANS, TRANS_POST, GET_BALANCE, GET_METODOSPAGAMENTO, GET_CATEGORIAS, GET_TRANS_ID, DELETE_TRANS_ID, GET_INFLOWS, GET_OUTFLOWS, EDIT_TRANS_ID } from '../helpers/api';
 import { useNavigate } from 'react-router-dom';
-import { dadosInput, dadosInputField, dadosType } from '@/types/userTypes';
+import { dadosInputField, dadosType } from '@/types/userTypes';
 
 interface UserStorageProps {
   children: ReactNode;
@@ -22,6 +22,8 @@ interface UserContextProps {
   setOutflows: React.Dispatch<React.SetStateAction<number>>;
   setDadosretorno: React.Dispatch<React.SetStateAction<dadosInputField>>;
   editTrans: (description: string, price: number, category: string, type: string, token: string, metodoPagamento: string, id:number) => void;
+  setTipo: React.Dispatch<React.SetStateAction<string>>;
+  tipo:string;
   logado: boolean;
   balance: number;
   inflows: number;
@@ -38,6 +40,7 @@ export const UserStorage: React.FC<UserStorageProps> = ({ children }) => {
 
   // @ts-ignore
   const [login, setLogin] = React.useState<boolean>(false);
+  const [tipo, setTipo] = React.useState<string>('');
   const [data, setData] = React.useState({ username: 'Login/Criar', roles: '' });
   const [logado, setLogado] = React.useState(false);
   const [balance, setBalance] = React.useState(0);
@@ -168,7 +171,6 @@ export const UserStorage: React.FC<UserStorageProps> = ({ children }) => {
     if (description && price && category && type && metodoPagamento && token) {
       // const body = { description, price, category, type, metodoPagamento }
       const { url, option } = EDIT_TRANS_ID( token, id, { description , price , category , type , metodoPagamento } );
-      console.log(option+' ' + url)
       // @ts-ignore
       const response = await fetch(url, option);
     }
@@ -191,6 +193,8 @@ export const UserStorage: React.FC<UserStorageProps> = ({ children }) => {
       setInflows,
       setOutflows,
       setDadosretorno,
+      setTipo,
+      tipo, 
       logado,
       balance,
       inflows,

@@ -11,8 +11,8 @@ interface InputFieldProps {
     dados?: dadosInputField;
 }
 
-function InputField({ id, tipo, dados }: InputFieldProps) {
-    const { criarTrans, pegarBalanco, pegarMetodos, pegarCategorias, setBalance, editTrans, dadosRetorno, setDadosretorno } = React.useContext(UserContext);
+function InputField({ id }: InputFieldProps) {
+    const { tipo, criarTrans, pegarBalanco, pegarMetodos, pegarCategorias, setBalance, editTrans, dadosRetorno, setDadosretorno } = React.useContext(UserContext);
     const description = useForm();
     const price = useForm();
     const [metodo, setMetodo] = React.useState<Array<string>>([]);
@@ -46,40 +46,29 @@ function InputField({ id, tipo, dados }: InputFieldProps) {
             }
         }
     }
-
     async function handleSubmit(event: any) {
         event.preventDefault();
         const token = window.localStorage.getItem('accessToken') ?? "";
+        
+        if (token && id != 156484651894 && tipo == 'editar') {
+            editTrans(description.value, price.value, category, type, metodoPagemento, token, id);
+        }
 
-        if (token && id == 156484651894 && tipo != 'editar') {
-
-            console.log(description.value, price.value, category, type, metodoPagemento);
+        if (token && tipo == 'criar') {
             if (description.validate() && price.validate() && category) {
                 criarTrans(description.value, price.value, category, type, metodoPagemento, token);
             }
-            setBalance(await pegarBalanco(token))
-            description.setValue('')
-            price.setValue('')
-            setCategory('')
-            setMetodoPagamento('')
-            setType('')
-            setCategory('');
-
         }
 
-        if (token && id != 156484651894 && tipo == 'editar') {
 
-            editTrans(description.value, price.value, category, type, metodoPagemento, token, id);
-
-            setBalance(await pegarBalanco(token))
-            description.setValue('')
-            price.setValue('')
-            setCategory('')
-            setMetodoPagamento('')
-            setType('')
-            setCategory('');
-            if (setDadosretorno) setDadosretorno(dadosExemplo)
-        }
+        setBalance(await pegarBalanco(token))
+        description.setValue('')
+        price.setValue('')
+        setCategory('')
+        setMetodoPagamento('')
+        setType('')
+        setCategory('');
+        if (setDadosretorno) setDadosretorno(dadosExemplo)
 
     }
 
@@ -95,12 +84,11 @@ function InputField({ id, tipo, dados }: InputFieldProps) {
 
     React.useEffect(() => {
         if (dadosRetorno) {
-            price.setValue(dadosRetorno.price)
-            description.setValue(dadosRetorno.description)
-            setCategory(dadosRetorno.category)
-            setMetodoPagamento(dadosRetorno.metodoPagamento)
-            setType(dadosRetorno.type)
-            
+            price.setValue(dadosRetorno.price || 0)
+            description.setValue(dadosRetorno.description || '')
+            setCategory(dadosRetorno.category || '')
+            setMetodoPagamento(dadosRetorno.metodoPagamento || '')
+            setType(dadosRetorno.type || '')
         }
     }, [dadosRetorno])
 
@@ -111,31 +99,31 @@ function InputField({ id, tipo, dados }: InputFieldProps) {
             onSubmit={handleSubmit} >
             <Input label="Descrição" type="text" name="descriptio" {...description} />
             <Input label="Preço" type="number" name="price" {...price} />
-            <select className={tipo == 'editar' ? 'h-10 rounded-md p-2 mb-4' : 'h-10 rounded-md p-2'} value={category} onChange={(e) => setCategory(e.target.value)}>
+            <select title='Categorias' className={tipo == 'editar' ? 'h-10 rounded-md p-2 mb-4' : 'h-10 rounded-md p-2'} value={category || ''} onChange={(e) => setCategory(e.target.value)}>
                 {categList.map((tipo: string, id: number) => (
-                    <option key={id} value={tipo}>
-                        {tipo}
+                    <option key={id} value={tipo || ''}>
+                        {tipo || ''}
                     </option>
                 ))}
 
             </select>
-            <select className={tipo == 'editar' ? 'h-10 rounded-md p-2 mb-4' : 'h-10 rounded-md p-2'} value={metodoPagemento} onChange={(e) => setMetodoPagamento(e.target.value)}>
+            <select title='Metodos de pagamento' className={tipo == 'editar' ? 'h-10 rounded-md p-2 mb-4' : 'h-10 rounded-md p-2'} value={metodoPagemento || ''} onChange={(e) => setMetodoPagamento(e.target.value)}>
                 {metodo.map((tipo: string, id: number) => (
-                    <option key={id} value={tipo}>
-                        {tipo}
+                    <option key={id} value={tipo || ''}>
+                        {tipo || ''}
                     </option>
                 ))}
             </select>
-            <select className={tipo == 'editar' ? 'h-10 rounded-md p-2 mb-4' : 'h-10 rounded-md p-2'} value={type} onChange={(e) => setType(e.target.value)}>
+            <select title='Tipo de transação' className={tipo == 'editar' ? 'h-10 rounded-md p-2 mb-4' : 'h-10 rounded-md p-2'} value={type || ''} onChange={(e) => setType(e.target.value)}>
                 <option value="">Tipo transação</option>
                 {tipoList.map((tipo: string, id: number) => (
-                    <option key={id} value={tipo}>
-                        {tipo}
+                    <option key={id} value={tipo || ''}>
+                        {tipo || ''}
                     </option>
                 ))}
             </select>
 
-            {tipo == 'criar' ? <Button className=''> Adicionar </Button> : <Button className='bg-red-500 fixed right-21 bottom-9'> Editar </Button>}
+            <Button className=''> Enviar </Button>
         </form>
     )
 
