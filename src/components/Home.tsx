@@ -1,6 +1,6 @@
 import React from 'react'
 import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from './ui/table';
-import { dadosExemplo, dadosType } from '../types/userTypes'
+import { dadosExemplo } from '../types/userTypes'
 import { UserContext } from '@/context/UserStorage';
 import InputField from './InputField';
 import { Pen, Trash } from 'lucide-react';
@@ -9,20 +9,47 @@ import { Card, CardDescription, CardTitle } from './ui/card';
 
 function Home() {
 
-  const { setTipo, dadosRetorno, setDadosretorno, userTrans, pegarTransacaoId, deletarTransacaoId, pegarBalanco, balance, setBalance, pegarEntradas, pegarSaidas, inflows, outflows, setInflows, setOutflows } = React.useContext(UserContext);
-  const [dados, setDados] = React.useState<dadosType>();
-  const [deleteModal, setDeleteModal] = React.useState(false);
-  const [editModal, setEditModal] = React.useState(false);
+  const {
+    setTipo,
+    dadosRetorno,
+    setDadosretorno,
+    userTrans,
+    pegarTransacaoId,
+    deletarTransacaoId,
+    pegarBalanco,
+    balance,
+    setBalance,
+    pegarEntradas,
+    pegarSaidas,
+    inflows,
+    outflows,
+    setInflows,
+    setOutflows,
+    dadosBusca,
+    setDadosBusca,
+    setDeleteModal,
+    setEditModal,
+    editModal,
+    deleteModal
+  } = React.useContext(UserContext);
+
   const [selecionado, setSelecionado] = React.useState<number>(156484651894);
 
   async function removeRow(id: number) {
-    const token = window.localStorage.getItem('accessToken');
+    const token = window.localStorage.getItem('accessToken') || "";
     if (token && selecionado !== 156484651894) {
       // @ts-ignore
       let response: any = await deletarTransacaoId(token, id);
       setSelecionado(156484651894);
       setDeleteModal(false);
     }
+    const load = async () => {
+      setDadosBusca(await userTrans(token))
+      setBalance(await pegarBalanco(token))
+      setInflows(await pegarEntradas(token))
+      setOutflows(await pegarSaidas(token))
+    }
+    load()
   }
   async function editRow(id: number) {
     const token = window.localStorage.getItem('accessToken');
@@ -38,13 +65,14 @@ function Home() {
   React.useEffect(() => {
     const token = window.localStorage.getItem('accessToken') ?? "";
     const load = async () => {
-      setDados(await userTrans(token));
+      setDadosBusca(await userTrans(token))
       setBalance(await pegarBalanco(token))
       setInflows(await pegarEntradas(token))
       setOutflows(await pegarSaidas(token))
+      console.log("feito a busca")
     }
     load()
-  }, [dados])
+  }, [])
 
 
   return (
@@ -61,8 +89,9 @@ function Home() {
         selecionado={selecionado}
         type='editar'
         open={editModal}
-        onClose={() => {setEditModal(false) 
-        setDadosretorno(dadosExemplo)
+        onClose={() => {
+          setEditModal(false)
+          setDadosretorno(dadosExemplo)
         }}
         action={editRow}
         dados={dadosRetorno && dadosRetorno}
@@ -71,29 +100,29 @@ function Home() {
       <div className='m-auto rounded-md w-3/4 bg-gray-100'>
 
         <div className='flex justify-center space-x-5 mb-6'>
-           <Card className=' w-1/6 flex flex-col justify-center items-center p-3'>
+          <Card className=' w-1/6 flex flex-col justify-center items-center p-3'>
             <CardTitle>Entradas</CardTitle>
             {
-              inflows && <CardDescription className='text-2xl text-blue-500' >R$ {inflows.toFixed(2)}</CardDescription>
+              inflows && <CardDescription className='text-2xl text-blue-500' >R$ {inflows}</CardDescription>
             }
           </Card>
           <Card className=' w-1/6 flex flex-col justify-center items-center p-3'>
             <CardTitle>Saidas</CardTitle>
             {
-              outflows && <CardDescription className='text-2xl text-orange-500' >R$ {outflows.toFixed(2)}</CardDescription>
+              outflows && <CardDescription className='text-2xl text-orange-500' >R$ {outflows}</CardDescription>
             }
           </Card>
           <Card className=' w-1/6 flex flex-col justify-center items-center p-3'>
             <CardTitle>Balanço</CardTitle>
             {
-              balance < 0
-                ? <CardDescription className='text-2xl text-red-500' >R$ {balance.toFixed(2)}</CardDescription>
-                : <CardDescription className='text-2xl text-green-500' >R$ {balance.toFixed(2)}</CardDescription>
+              balance
+                ? <CardDescription className='text-2xl text-red-500' >R$ {balance}</CardDescription>
+                : <CardDescription className='text-2xl text-green-500' >R$ {balance}</CardDescription>
             }
           </Card>
         </div>
-
         <InputField id={selecionado} tipo='criar' />
+
         <div className='space-y-2'>
           <Table className='text-md border-solid border-2 border-gray-300'>
             <TableCaption className='text-md font-bold' >Lista de transaçoes</TableCaption>
@@ -108,14 +137,15 @@ function Home() {
                 <TableHead className="text-center">Ações</TableHead>
               </TableRow>
             </TableHeader>
-            {dados ?
-              dados.map((dados) => {
+            {dadosBusca
+              ?
+              dadosBusca.map((dados) => {
                 return (
                   <TableBody key={dados.id}>
                     <TableRow key={dados.id} className=''>
                       <TableCell className="font-medium text-center"> {dados.createTimeStamp} </TableCell>
                       <TableCell className="font-medium text-center"> {dados.description} </TableCell>
-                      <TableCell className="font-medium text-center"> R$ {dados.price.toFixed(2)} </TableCell>
+                      <TableCell className="font-medium text-center"> R$ {dados.price} </TableCell>
                       <TableCell className="font-medium text-center"> {dados.category} </TableCell>
                       <TableCell className="font-medium text-center"> {dados.metodoPagamento} </TableCell>
                       <TableCell className="font-medium text-center"> {dados.type == "S" ? "Saida" : "Entrada"} </TableCell>
@@ -140,7 +170,21 @@ function Home() {
                   </TableBody>
                 )
               })
-              : null
+              :
+              <TableBody >
+                <TableRow className=''>
+                  <TableCell className="font-medium text-center"></TableCell>
+                  <TableCell className="font-medium text-center"></TableCell>
+                  <TableCell className="font-medium text-center"></TableCell>
+                  <TableCell className="font-medium text-center"></TableCell>
+                  <TableCell className="font-medium text-center"></TableCell>
+                  <TableCell className="font-medium text-center"></TableCell>
+                  <TableCell className="font-medium text-center flex justify-center gap-2 cursor-pointer">
+                    <Trash />
+                    <Pen />
+                  </TableCell>
+                </TableRow>
+              </TableBody>
             }
           </Table>
         </div>

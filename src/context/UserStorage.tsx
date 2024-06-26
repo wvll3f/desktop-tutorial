@@ -17,18 +17,25 @@ interface UserContextProps {
   criarTrans: (description: string, price: number, category: string, type: string, token: string, metodoPagamento: string) => void;
   deletarTransacaoId: (token: string, id: number) => void;
   pegarTransacaoId: (token: string, id: number) => any;
-  setBalance: React.Dispatch<React.SetStateAction<number>>;
-  setInflows: React.Dispatch<React.SetStateAction<number>>;
-  setOutflows: React.Dispatch<React.SetStateAction<number>>;
+  setBalance: React.Dispatch<React.SetStateAction<string>>;
+  setEditModal: React.Dispatch<React.SetStateAction<boolean>>;
+  setDeleteModal: React.Dispatch<React.SetStateAction<boolean>>;
+  setInflows: React.Dispatch<React.SetStateAction<string>>;
+  setOutflows: React.Dispatch<React.SetStateAction<string>>;
   setDadosretorno: React.Dispatch<React.SetStateAction<dadosInputField>>;
-  editTrans: (description: string, price: number, category: string, type: string, token: string, metodoPagamento: string, id:number) => void;
+  editTrans: (description: string, price: number, category: string, type: string, token: string, metodoPagamento: string, id: number) => void;
   setTipo: React.Dispatch<React.SetStateAction<string>>;
-  tipo:string;
+  setData:React.Dispatch<React.SetStateAction<any>>;
+  setDadosBusca:React.Dispatch<React.SetStateAction<Array<dadosType>>>;
+  dadosBusca?:Array<dadosType>;
+  tipo: string;
   logado: boolean;
-  balance: number;
-  inflows: number;
-  outflows: number;
-  dadosRetorno?:dadosInputField;
+  editModal: boolean;
+  deleteModal: boolean;
+  balance: string;
+  inflows: string;
+  outflows: string;
+  dadosRetorno?: dadosInputField;
   data: {
     username: string;
     roles: string;
@@ -38,15 +45,17 @@ interface UserContextProps {
 export const UserContext = React.createContext<UserContextProps>({} as UserContextProps);
 export const UserStorage: React.FC<UserStorageProps> = ({ children }) => {
 
-  // @ts-ignore
-  const [login, setLogin] = React.useState<boolean>(false);
+
+  const [dadosBusca, setDadosBusca] = React.useState<dadosType[]>([]);
   const [tipo, setTipo] = React.useState<string>('');
   const [data, setData] = React.useState({ username: 'Login/Criar', roles: '' });
   const [logado, setLogado] = React.useState(false);
-  const [balance, setBalance] = React.useState(0);
-  const [inflows, setInflows] = React.useState(0);
-  const [outflows, setOutflows] = React.useState(0);
+  const [balance, setBalance] = React.useState("0.00");
+  const [inflows, setInflows] = React.useState("0.00");
+  const [outflows, setOutflows] = React.useState("0.00");
   const [dadosRetorno, setDadosretorno] = React.useState({} as dadosInputField);
+  const [deleteModal, setDeleteModal] = React.useState(false);
+  const [editModal, setEditModal] = React.useState(false);
   const navigate = useNavigate();
 
   async function getUser(token: string) {
@@ -54,7 +63,6 @@ export const UserStorage: React.FC<UserStorageProps> = ({ children }) => {
     const response = await fetch(url, option);
     const json = await response.json();
     setData(json);
-    setLogin(true);
     if (response.status === 200) {
       navigate('/')
     }
@@ -69,7 +77,6 @@ export const UserStorage: React.FC<UserStorageProps> = ({ children }) => {
             navigate('/login')
           })
       }
-      pegarBalanco(token);
     }
     autoLogin();
   }, [])
@@ -83,6 +90,9 @@ export const UserStorage: React.FC<UserStorageProps> = ({ children }) => {
     if (response.status === 200) {
       setLogado(true)
       navigate('/')
+    }else{
+      setLogado(false)
+      setData({ username: 'Login/Criar', roles: '' })
     }
   }
   async function userTrans(token: string): Promise<dadosType> {
@@ -104,10 +114,9 @@ export const UserStorage: React.FC<UserStorageProps> = ({ children }) => {
     const response = await fetch(url, option);
     const json = await response.json();
     if (json) {
-      setBalance(json)
-      return json as number;
+      return json;
     } else {
-      return null
+      return "0.00"
     }
   }
   async function pegarEntradas(token: string) {
@@ -115,10 +124,9 @@ export const UserStorage: React.FC<UserStorageProps> = ({ children }) => {
     const response = await fetch(url, option);
     const json = await response.json();
     if (json) {
-      setInflows(json)
-      return json as number;
+      return json;
     } else {
-      return null
+      return "0.00"
     }
   }
   async function pegarSaidas(token: string) {
@@ -126,10 +134,9 @@ export const UserStorage: React.FC<UserStorageProps> = ({ children }) => {
     const response = await fetch(url, option);
     const json = await response.json();
     if (json) {
-      setOutflows(json)
-      return json as number;
+      return json;
     } else {
-      return null
+      return "0.00"
     }
   }
   async function pegarMetodos(token: string) {
@@ -170,7 +177,7 @@ export const UserStorage: React.FC<UserStorageProps> = ({ children }) => {
   async function editTrans(description: string, price: number, category: string, type: string, metodoPagamento: string, token: string, id: number) {
     if (description && price && category && type && metodoPagamento && token) {
       // const body = { description, price, category, type, metodoPagamento }
-      const { url, option } = EDIT_TRANS_ID( token, id, { description , price , category , type , metodoPagamento } );
+      const { url, option } = EDIT_TRANS_ID(token, id, { description, price, category, type, metodoPagamento });
       // @ts-ignore
       const response = await fetch(url, option);
     }
@@ -194,7 +201,14 @@ export const UserStorage: React.FC<UserStorageProps> = ({ children }) => {
       setOutflows,
       setDadosretorno,
       setTipo,
-      tipo, 
+      setData,
+      setDadosBusca,
+      setDeleteModal,
+      setEditModal,
+      deleteModal,
+      editModal,
+      dadosBusca,
+      tipo,
       logado,
       balance,
       inflows,

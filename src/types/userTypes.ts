@@ -2,12 +2,12 @@ export type dadosType = {
   id: number;
   description: string;
   price: number;
-  category: number;
+  category: string;
   metodoPagamento: string;
-  type: String;
+  type: string;
   createTimeStamp: string;
-  user: String;
-}[];
+  user: string;
+};
 
 
 export type dadosInput = {

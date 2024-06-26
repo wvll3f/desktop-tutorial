@@ -12,7 +12,26 @@ interface InputFieldProps {
 }
 
 function InputField({ id }: InputFieldProps) {
-    const { tipo, criarTrans, pegarBalanco, pegarMetodos, pegarCategorias, setBalance, editTrans, dadosRetorno, setDadosretorno } = React.useContext(UserContext);
+    const { tipo,
+        criarTrans,
+        pegarBalanco,
+        pegarMetodos,
+        pegarCategorias,
+        setBalance,
+        editTrans,
+        setDadosretorno,
+        userTrans,
+        setDadosBusca,
+        setEditModal,
+        setDeleteModal,
+        setInflows,
+        setOutflows,
+        pegarEntradas,
+        pegarSaidas,
+        dadosRetorno,
+        dadosBusca
+    } = React.useContext(UserContext);
+
     const description = useForm();
     const price = useForm();
     const [metodo, setMetodo] = React.useState<Array<string>>([]);
@@ -49,27 +68,32 @@ function InputField({ id }: InputFieldProps) {
     async function handleSubmit(event: any) {
         event.preventDefault();
         const token = window.localStorage.getItem('accessToken') ?? "";
-        
-        if (token && id != 156484651894 && tipo == 'editar') {
-            editTrans(description.value, price.value, category, type, metodoPagemento, token, id);
-        }
 
-        if (token && tipo == 'criar') {
-            if (description.validate() && price.validate() && category) {
-                criarTrans(description.value, price.value, category, type, metodoPagemento, token);
+        const load = async () => {
+            if (token && id != 156484651894 && tipo == 'editar') {
+                editTrans(description.value, price.value, category, type, metodoPagemento, token, id);
             }
+            if (token && tipo == 'criar') {
+                if (description.validate() && price.validate() && category) {
+                    criarTrans(description.value, price.value, category, type, metodoPagemento, token);
+                }
+            }
+            setBalance(await pegarBalanco(token))
+            setDadosBusca(await userTrans(token))
+            setInflows(await pegarEntradas(token))
+            setOutflows(await pegarSaidas(token))
+            description.setValue('')
+            price.setValue('')
+            setCategory('')
+            setMetodoPagamento('')
+            setType('')
+            setCategory('');
+            setDadosBusca(await userTrans(token))
+            setEditModal(false)
+            setDeleteModal(false)
+            if (setDadosretorno) setDadosretorno(dadosExemplo)
         }
-
-
-        setBalance(await pegarBalanco(token))
-        description.setValue('')
-        price.setValue('')
-        setCategory('')
-        setMetodoPagamento('')
-        setType('')
-        setCategory('');
-        if (setDadosretorno) setDadosretorno(dadosExemplo)
-
+        load()
     }
 
     React.useEffect(() => {
@@ -78,9 +102,10 @@ function InputField({ id }: InputFieldProps) {
             setBalance(await pegarBalanco(token))
             await getCategorias()
             await getMetodos()
+            console.log("busca")
         }
         load()
-    }, [])
+    }, [dadosBusca])
 
     React.useEffect(() => {
         if (dadosRetorno) {
