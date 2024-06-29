@@ -59,6 +59,17 @@ export function GET_TRANS(token: String) {
         },
     };
 }
+export function GET_TRANS_BY_DATE(token: String) {
+    return {
+        url: URL_API + '/transacoesdate?dataInicial=2024-07-01&dataFinal=2024-07-30',
+        option: {
+            method: 'GET',
+            headers: {
+                authorization: 'Bearer ' + token,
+            },
+        },
+    };
+}
 export function GET_TRANS_ID(token: String, id: number) {
     return {
         url: URL_API + '/trans' + '/' + id,

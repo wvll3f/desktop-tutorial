@@ -5,8 +5,15 @@ export type dadosType = {
   category: string;
   metodoPagamento: string;
   type: string;
-  createTimeStamp: string;
+  date: string;
   user: string;
+};
+
+export interface Item {
+  date: Date;
+  category: string;
+  title: string;
+  value: number;
 };
 
 

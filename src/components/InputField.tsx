@@ -34,6 +34,7 @@ function InputField({ id }: InputFieldProps) {
 
     const description = useForm();
     const price = useForm();
+    const dataTransacao = useForm();
     const [metodo, setMetodo] = React.useState<Array<string>>([]);
     const [categList, setCategList] = React.useState<Array<string>>([]);
 
@@ -75,7 +76,7 @@ function InputField({ id }: InputFieldProps) {
             }
             if (token && tipo == 'criar') {
                 if (description.validate() && price.validate() && category) {
-                    criarTrans(description.value, price.value, category, type, metodoPagemento, token);
+                    criarTrans(description.value, price.value, category, type, dataTransacao.value, metodoPagemento, token);
                 }
             }
             setBalance(await pegarBalanco(token))
@@ -118,12 +119,13 @@ function InputField({ id }: InputFieldProps) {
     }, [dadosRetorno])
 
     return (
-        <form className={`${tipo != "editar" ? 'flex justify-center items-center space-x-8 mb-2' :
+        <form className={`${tipo != "editar" ?' flex justify-center items-center w-full space-x-4 mb-2' :
             'flex flex-col items-start justify-center'
             }`}
             onSubmit={handleSubmit} >
             <Input label="Descrição" type="text" name="descriptio" {...description} />
             <Input label="Preço" type="number" name="price" {...price} />
+            <Input label="Data" type="date" name="data" {...dataTransacao} />
             <select title='Categorias' className={tipo == 'editar' ? 'h-10 rounded-md p-2 mb-4' : 'h-10 rounded-md p-2'} value={category || ''} onChange={(e) => setCategory(e.target.value)}>
                 {categList.map((tipo: string, id: number) => (
                     <option key={id} value={tipo || ''}>

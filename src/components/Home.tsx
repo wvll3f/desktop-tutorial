@@ -6,6 +6,8 @@ import InputField from './InputField';
 import { Pen, Trash } from 'lucide-react';
 import Modal from './Modal';
 import { Card, CardDescription, CardTitle } from './ui/card';
+import MounthYear from './MounthYear';
+
 
 function Home() {
 
@@ -33,7 +35,7 @@ function Home() {
     deleteModal
   } = React.useContext(UserContext);
 
-  const [selecionado, setSelecionado] = React.useState<number>(156484651894);
+  const [selecionado, setSelecionado] = React.useState<number>(1564846519894);
 
   async function removeRow(id: number) {
     const token = window.localStorage.getItem('accessToken') || "";
@@ -51,6 +53,7 @@ function Home() {
     }
     load()
   }
+
   async function editRow(id: number) {
     const token = window.localStorage.getItem('accessToken');
     if (token && selecionado !== 156484651894) {
@@ -97,7 +100,7 @@ function Home() {
         dados={dadosRetorno && dadosRetorno}
       />
 
-      <div className='m-auto rounded-md w-3/4 bg-gray-100'>
+      <div className='m-auto rounded-md bg-gray-100'>
 
         <div className='flex justify-center space-x-5 mb-6'>
           <Card className=' w-1/6 flex flex-col justify-center items-center p-3'>
@@ -115,16 +118,17 @@ function Home() {
           <Card className=' w-1/6 flex flex-col justify-center items-center p-3'>
             <CardTitle>Balanço</CardTitle>
             {
-              balance
+              balance?.toString().includes('-')
                 ? <CardDescription className='text-2xl text-red-500' >R$ {balance}</CardDescription>
                 : <CardDescription className='text-2xl text-green-500' >R$ {balance}</CardDescription>
             }
           </Card>
         </div>
-        <InputField id={selecionado} tipo='criar' />
 
-        <div className='space-y-2'>
-          <Table className='text-md border-solid border-2 border-gray-300'>
+        <InputField id={selecionado} tipo='criar' />
+        <MounthYear/>    
+        <div className=' space-y-2 min-w-[620px] '>
+          <Table className='text-md border-solid border-2 min-w-[620px] border-gray-300'>
             <TableCaption className='text-md font-bold' >Lista de transaçoes</TableCaption>
             <TableHeader className=''>
               <TableRow className=''>
@@ -143,7 +147,7 @@ function Home() {
                 return (
                   <TableBody key={dados.id}>
                     <TableRow key={dados.id} className=''>
-                      <TableCell className="font-medium text-center"> {dados.createTimeStamp} </TableCell>
+                      <TableCell className="font-medium text-center"> {dados?.date} </TableCell>
                       <TableCell className="font-medium text-center"> {dados.description} </TableCell>
                       <TableCell className="font-medium text-center"> R$ {dados.price} </TableCell>
                       <TableCell className="font-medium text-center"> {dados.category} </TableCell>

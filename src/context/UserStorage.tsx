@@ -14,7 +14,7 @@ interface UserContextProps {
   pegarSaidas: (token: string) => any;
   pegarMetodos: (token: string) => any;
   pegarCategorias: (token: string) => any;
-  criarTrans: (description: string, price: number, category: string, type: string, token: string, metodoPagamento: string) => void;
+  criarTrans: (description: string, price: number, category: string, type: string,date: string, token: string, metodoPagamento: string) => void;
   deletarTransacaoId: (token: string, id: number) => void;
   pegarTransacaoId: (token: string, id: number) => any;
   setBalance: React.Dispatch<React.SetStateAction<string>>;
@@ -104,8 +104,8 @@ export const UserStorage: React.FC<UserStorageProps> = ({ children }) => {
     const json = await response.json();
     return json as dadosType;
   }
-  async function criarTrans(description: string, price: number, category: string, type: string, metodoPagamento: string, token: string) {
-    const { url, option } = TRANS_POST({ description, price, category, type, metodoPagamento }, token);
+  async function criarTrans(description: string, price: number, category: string, type: string,date: string, metodoPagamento: string, token: string) {
+    const { url, option } = TRANS_POST({ description, price, category, type,date, metodoPagamento }, token);
     // @ts-ignore
     const response = await fetch(url, option);
   }
