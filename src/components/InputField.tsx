@@ -4,6 +4,7 @@ import { Button } from './ui/button'
 import useForm from '@/hooks/useForm'
 import { UserContext } from '@/context/UserStorage'
 import { dadosExemplo, dadosInputField, responseMetodostype } from '@/types/userTypes'
+import { DateContext } from '@/context/DateStorage'
 
 interface InputFieldProps {
     id: number;
@@ -31,6 +32,8 @@ function InputField({ id }: InputFieldProps) {
         dadosRetorno,
         dadosBusca
     } = React.useContext(UserContext);
+
+    const {startDate, endDate, getTransByDate} = React.useContext(DateContext)
 
     const description = useForm();
     const price = useForm();
@@ -80,7 +83,7 @@ function InputField({ id }: InputFieldProps) {
                 }
             }
             setBalance(await pegarBalanco(token))
-            setDadosBusca(await userTrans(token))
+            setDadosBusca(await getTransByDate(startDate,endDate,token))
             setInflows(await pegarEntradas(token))
             setOutflows(await pegarSaidas(token))
             description.setValue('')
@@ -89,7 +92,7 @@ function InputField({ id }: InputFieldProps) {
             setMetodoPagamento('')
             setType('')
             setCategory('');
-            setDadosBusca(await userTrans(token))
+            setDadosBusca(await getTransByDate(startDate,endDate,token))
             setEditModal(false)
             setDeleteModal(false)
             if (setDadosretorno) setDadosretorno(dadosExemplo)
@@ -103,7 +106,6 @@ function InputField({ id }: InputFieldProps) {
             setBalance(await pegarBalanco(token))
             await getCategorias()
             await getMetodos()
-            console.log("busca")
         }
         load()
     }, [dadosBusca])

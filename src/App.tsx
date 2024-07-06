@@ -11,16 +11,16 @@ function App() {
 
   return (
     <UserStorage>
-      <div className='flex items-center w-screen space-y-5 h-screen flex-col bg-gray-100'>
-        <Header />
-        <DateStorage>
+      <DateStorage>
+        <div className='flex items-center w-screen space-y-5 h-screen flex-col bg-gray-100'>
+          <Header />
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/login" element={<Login />} />
           </Routes>
-        </DateStorage>
-        <Footer className=' absolute  bottom-0' />
-      </div>
+          <Footer className=' absolute  bottom-0' />
+        </div>
+      </DateStorage>
     </UserStorage >
 
   )

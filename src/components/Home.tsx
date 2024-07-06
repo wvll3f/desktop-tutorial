@@ -7,6 +7,7 @@ import { Pen, Trash } from 'lucide-react';
 import Modal from './Modal';
 import { Card, CardDescription, CardTitle } from './ui/card';
 import MounthYear from './MounthYear';
+import { DateContext } from '@/context/DateStorage';
 
 
 function Home() {
@@ -15,7 +16,6 @@ function Home() {
     setTipo,
     dadosRetorno,
     setDadosretorno,
-    userTrans,
     pegarTransacaoId,
     deletarTransacaoId,
     pegarBalanco,
@@ -35,6 +35,8 @@ function Home() {
     deleteModal
   } = React.useContext(UserContext);
 
+  const { getTransByDate, endDate, startDate, setRangeMounth, mesAtual, setMesAtual, pegarMesAtual } = React.useContext(DateContext)
+
   const [selecionado, setSelecionado] = React.useState<number>(1564846519894);
 
   async function removeRow(id: number) {
@@ -44,18 +46,20 @@ function Home() {
       let response: any = await deletarTransacaoId(token, id);
       setSelecionado(156484651894);
       setDeleteModal(false);
+      const load = async () => {
+        setDadosBusca(await getTransByDate(startDate, endDate, token))
+        setBalance(await pegarBalanco(startDate, endDate, token))
+        setInflows(await pegarEntradas(startDate, endDate, token))
+        setOutflows(await pegarSaidas(startDate, endDate, token))
+      }
+      load()
     }
-    const load = async () => {
-      setDadosBusca(await userTrans(token))
-      setBalance(await pegarBalanco(token))
-      setInflows(await pegarEntradas(token))
-      setOutflows(await pegarSaidas(token))
-    }
-    load()
   }
 
   async function editRow(id: number) {
     const token = window.localStorage.getItem('accessToken');
+    setMesAtual(pegarMesAtual())
+    setRangeMounth(mesAtual)
     if (token && selecionado !== 156484651894) {
       //@ts-ignore
       let response = await deletarTransacaoId(token, id);
@@ -67,15 +71,16 @@ function Home() {
 
   React.useEffect(() => {
     const token = window.localStorage.getItem('accessToken') ?? "";
+    setRangeMounth(mesAtual)
+    window.localStorage.setItem('mes', mesAtual);
     const load = async () => {
-      setDadosBusca(await userTrans(token))
-      setBalance(await pegarBalanco(token))
-      setInflows(await pegarEntradas(token))
-      setOutflows(await pegarSaidas(token))
-      console.log("feito a busca")
+      setBalance(await pegarBalanco(startDate, endDate, token))
+      setInflows(await pegarEntradas(startDate, endDate, token))
+      setOutflows(await pegarSaidas(startDate, endDate, token))
+      setDadosBusca(await getTransByDate(startDate, endDate, token))
     }
     load()
-  }, [])
+  }, [mesAtual])
 
 
   return (
@@ -126,7 +131,7 @@ function Home() {
         </div>
 
         <InputField id={selecionado} tipo='criar' />
-        <MounthYear/>    
+        <MounthYear />
         <div className=' space-y-2 min-w-[620px] '>
           <Table className='text-md border-solid border-2 min-w-[620px] border-gray-300'>
             <TableCaption className='text-md font-bold' >Lista de transaçoes</TableCaption>
@@ -143,7 +148,7 @@ function Home() {
             </TableHeader>
             {dadosBusca
               ?
-              dadosBusca.map((dados) => {
+              dadosBusca?.map((dados) => {
                 return (
                   <TableBody key={dados.id}>
                     <TableRow key={dados.id} className=''>

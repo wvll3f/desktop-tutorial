@@ -105,9 +105,9 @@ export function DELETE_TRANS_ID(token: String, id: number) {
         },
     };
 }
-export function GET_BALANCE(token: string) {
+export function GET_BALANCE(startDate:string, endDate:string, token: string) {
     return {
-        url: URL_API + '/balance',
+        url: URL_API + `/balance?dataInicial=${startDate}&dataFinal=${endDate}`,
         option: {
             method: 'GET',
             headers: {
@@ -116,9 +116,9 @@ export function GET_BALANCE(token: string) {
         },
     };
 }
-export function GET_OUTFLOWS(token: string) {
+export function GET_OUTFLOWS(startDate:string, endDate:string, token: string) {
     return {
-        url: URL_API + '/outflows',
+        url: URL_API + `/outflows?dataInicial=${startDate}&dataFinal=${endDate}`,
         option: {
             method: 'GET',
             headers: {
@@ -127,9 +127,9 @@ export function GET_OUTFLOWS(token: string) {
         },
     };
 }
-export function GET_INFLOWS(token: string) {
+export function GET_INFLOWS(startDate:string, endDate:string, token: string) {
     return {
-        url: URL_API + '/inflows',
+        url: URL_API + `/inflows?dataInicial=${startDate}&dataFinal=${endDate}`,
         option: {
             method: 'GET',
             headers: {
@@ -141,6 +141,17 @@ export function GET_INFLOWS(token: string) {
 export function GET_METODOSPAGAMENTO(token: string) {
     return {
         url: URL_API + '/metodos',
+        option: {
+            method: 'GET',
+            headers: {
+                authorization: 'Bearer ' + token,
+            },
+        },
+    };
+}
+export function GET_DATE_TRANS(startDate:string, endDate:string, token: string) {
+    return {
+        url: URL_API +`/transacoesdate?dataInicial=${startDate}&dataFinal=${endDate}` ,
         option: {
             method: 'GET',
             headers: {

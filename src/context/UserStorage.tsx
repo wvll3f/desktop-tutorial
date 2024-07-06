@@ -9,9 +9,9 @@ interface UserStorageProps {
 interface UserContextProps {
   userLogin: (username: string, password: string) => void;
   userTrans: (token: string) => any;
-  pegarBalanco: (token: string) => any;
-  pegarEntradas: (token: string) => any;
-  pegarSaidas: (token: string) => any;
+  pegarBalanco: (startDate:string, endDate:string, token: string) => any;
+  pegarEntradas: (startDate:string, endDate:string, token: string) => any;
+  pegarSaidas: (startDate:string, endDate:string, token: string) => any;
   pegarMetodos: (token: string) => any;
   pegarCategorias: (token: string) => any;
   criarTrans: (description: string, price: number, category: string, type: string,date: string, token: string, metodoPagamento: string) => void;
@@ -27,7 +27,7 @@ interface UserContextProps {
   setTipo: React.Dispatch<React.SetStateAction<string>>;
   setData:React.Dispatch<React.SetStateAction<any>>;
   setDadosBusca:React.Dispatch<React.SetStateAction<Array<dadosType>>>;
-  dadosBusca?:Array<dadosType>;
+  dadosBusca?:Array<dadosType> | undefined;
   tipo: string;
   logado: boolean;
   editModal: boolean;
@@ -109,8 +109,8 @@ export const UserStorage: React.FC<UserStorageProps> = ({ children }) => {
     // @ts-ignore
     const response = await fetch(url, option);
   }
-  async function pegarBalanco(token: string) {
-    const { url, option } = GET_BALANCE(token);
+  async function pegarBalanco(startDate:string, endDate:string, token: string) {
+    const { url, option } = GET_BALANCE(startDate, endDate, token);
     const response = await fetch(url, option);
     const json = await response.json();
     if (json) {
@@ -119,8 +119,8 @@ export const UserStorage: React.FC<UserStorageProps> = ({ children }) => {
       return "0.00"
     }
   }
-  async function pegarEntradas(token: string) {
-    const { url, option } = GET_INFLOWS(token);
+  async function pegarEntradas(startDate:string, endDate:string, token: string) {
+    const { url, option } = GET_INFLOWS(startDate, endDate, token);
     const response = await fetch(url, option);
     const json = await response.json();
     if (json) {
@@ -129,8 +129,8 @@ export const UserStorage: React.FC<UserStorageProps> = ({ children }) => {
       return "0.00"
     }
   }
-  async function pegarSaidas(token: string) {
-    const { url, option } = GET_OUTFLOWS(token);
+  async function pegarSaidas(startDate:string, endDate:string, token: string) {
+    const { url, option } = GET_OUTFLOWS(startDate, endDate, token);
     const response = await fetch(url, option);
     const json = await response.json();
     if (json) {

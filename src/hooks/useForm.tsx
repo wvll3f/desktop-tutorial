@@ -47,7 +47,6 @@ const useForm = (type?: any) => {
   function onChange(event: React.ChangeEvent<HTMLInputElement>) {
     if (error) validate(event.target.value);
     setValue(event.target.value);
-    console.log(event.target.value)
   }
   return {
     value,
