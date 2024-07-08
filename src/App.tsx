@@ -12,13 +12,13 @@ function App() {
   return (
     <UserStorage>
       <DateStorage>
-        <div className='flex items-center w-screen space-y-5 h-screen flex-col bg-gray-100'>
+        <div className='min-w-screen min-h-screen overflow-hidden bg-gray-100'>
           <Header />
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/login" element={<Login />} />
           </Routes>
-          <Footer className=' absolute  bottom-0' />
+          <Footer className='' />
         </div>
       </DateStorage>
     </UserStorage >

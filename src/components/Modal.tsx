@@ -9,7 +9,7 @@ interface modalType {
     onClose: () => void;
     type: string;
     action?: (id: number) => void;
-    selecionado: number;
+    selecionado: number | null;
     dados?: dadosInputField;
 }
 
@@ -28,7 +28,7 @@ function Modal({ type, open, onClose, action, selecionado }: modalType) {
     return (
         <div onClick={onClose}
             className={`fixed z-10 inset-0 flex justify-center items-center transition-colors
-                ${open ? "visible bg-black/90" : " invisible"}`}
+                ${open ? "visible bg-black/95" : " invisible"}`}
         >
             <div
                 onClick={(e) => e.stopPropagation()}
@@ -55,7 +55,7 @@ function Modal({ type, open, onClose, action, selecionado }: modalType) {
                         type == 'editar' ?
                             <div className={"flex h-full justify-center space-x-2"}>
 
-                                <Button onClick={
+                                <Button variant='destructive' onClick={
                                     (e) => {
                                         e.stopPropagation()
                                         onClose()

@@ -7,7 +7,7 @@ import { dadosExemplo, dadosInputField, responseMetodostype } from '@/types/user
 import { DateContext } from '@/context/DateStorage'
 
 interface InputFieldProps {
-    id: number;
+    id: number|null;
     tipo: string;
     dados?: dadosInputField;
 }
@@ -73,7 +73,7 @@ function InputField({ id }: InputFieldProps) {
 
         const load = async () => {
             if (token && id != 156484651894 && tipo == 'editar') {
-                editTrans(description.value, price.value, category, type, metodoPagemento, token, id);
+                editTrans(description.value, price.value, category, type, metodoPagemento, token, id||0);
             }
             if (token && tipo == 'criar') {
                 if (description.validate() && price.validate() && category) {

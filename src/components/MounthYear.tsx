@@ -6,7 +6,7 @@ import { UserContext } from '@/context/UserStorage';
 
 function MounthYear() {
 
-    const { setRangeMounth, setCurrentDate, formatdate, getTransByDate, startDate, endDate, mesAtual, setMesAtual } = React.useContext(DateContext);
+    const { setRangeMounth, formatdate, getTransByDate, startDate, endDate, mesAtual, setMesAtual } = React.useContext(DateContext);
     const { setDadosBusca } = React.useContext(UserContext);
 
     React.useEffect(() => {

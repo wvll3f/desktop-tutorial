@@ -27,6 +27,8 @@ interface UserContextProps {
   setTipo: React.Dispatch<React.SetStateAction<string>>;
   setData:React.Dispatch<React.SetStateAction<any>>;
   setDadosBusca:React.Dispatch<React.SetStateAction<Array<dadosType>>>;
+  setSelecionado:React.Dispatch<React.SetStateAction<number|null>>;
+  selecionado:number|null;
   dadosBusca?:Array<dadosType> | undefined;
   tipo: string;
   logado: boolean;
@@ -56,6 +58,7 @@ export const UserStorage: React.FC<UserStorageProps> = ({ children }) => {
   const [dadosRetorno, setDadosretorno] = React.useState({} as dadosInputField);
   const [deleteModal, setDeleteModal] = React.useState(false);
   const [editModal, setEditModal] = React.useState(false);
+  const [selecionado, setSelecionado] = React.useState<number | null>(null);
   const navigate = useNavigate();
 
   async function getUser(token: string) {
@@ -205,6 +208,8 @@ export const UserStorage: React.FC<UserStorageProps> = ({ children }) => {
       setDadosBusca,
       setDeleteModal,
       setEditModal,
+      setSelecionado,
+      selecionado,
       deleteModal,
       editModal,
       dadosBusca,
