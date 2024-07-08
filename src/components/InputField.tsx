@@ -21,7 +21,6 @@ function InputField({ id }: InputFieldProps) {
         setBalance,
         editTrans,
         setDadosretorno,
-        userTrans,
         setDadosBusca,
         setEditModal,
         setDeleteModal,
@@ -30,7 +29,6 @@ function InputField({ id }: InputFieldProps) {
         pegarEntradas,
         pegarSaidas,
         dadosRetorno,
-        dadosBusca
     } = React.useContext(UserContext);
 
     const {startDate, endDate, getTransByDate} = React.useContext(DateContext)
@@ -63,7 +61,7 @@ function InputField({ id }: InputFieldProps) {
         const token = window.localStorage.getItem('accessToken')
         if (token) {
             let responseCategorias: Array<responseMetodostype> = await pegarCategorias(token);
-            if (metodosList.length === 1) {
+            if (categoriaList.length === 1) {
                 responseCategorias.forEach((categoria) => { categoriaList.push(categoria.name) })
                 setCategList(categoriaList)
             }
@@ -82,10 +80,10 @@ function InputField({ id }: InputFieldProps) {
                     criarTrans(description.value, price.value, category, type, dataTransacao.value, metodoPagemento, token);
                 }
             }
-            setBalance(await pegarBalanco(token))
+            setBalance(await pegarBalanco(startDate,endDate,token))
             setDadosBusca(await getTransByDate(startDate,endDate,token))
-            setInflows(await pegarEntradas(token))
-            setOutflows(await pegarSaidas(token))
+            setInflows(await pegarEntradas(startDate,endDate,token))
+            setOutflows(await pegarSaidas(startDate,endDate,token))
             description.setValue('')
             price.setValue('')
             setCategory('')
@@ -103,12 +101,12 @@ function InputField({ id }: InputFieldProps) {
     React.useEffect(() => {
         const token = window.localStorage.getItem('accessToken') ?? "";
         const load = async () => {
-            setBalance(await pegarBalanco(token))
+            setBalance(await pegarBalanco(startDate, endDate, token))
             await getCategorias()
             await getMetodos()
         }
         load()
-    }, [dadosBusca])
+    }, [])
 
     React.useEffect(() => {
         if (dadosRetorno) {
