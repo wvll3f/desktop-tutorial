@@ -1,6 +1,7 @@
 import { UserContext } from '@/context/UserStorage';
 import { Pen, Trash } from 'lucide-react';
 import React from 'react'
+import ResumeArea from './home/ResumeArea';
 
 function CellTable() {
 
@@ -15,6 +16,9 @@ function CellTable() {
 
     return (
         <div className=' relative w-full'>
+
+            <ResumeArea/>
+
             {dadosBusca
                 ?
                 dadosBusca?.map((dados: any) => {
