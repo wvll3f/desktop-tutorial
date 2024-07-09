@@ -13,9 +13,11 @@ interface InputFieldProps {
 }
 
 function InputField({ id }: InputFieldProps) {
-    const { tipo,
+    const { 
+        tipo,
         criarTrans,
         pegarBalanco,
+        setTipo,
         pegarMetodos,
         pegarCategorias,
         setBalance,
@@ -94,7 +96,8 @@ function InputField({ id }: InputFieldProps) {
             setEditModal(false)
             setDeleteModal(false)
             if (setDadosretorno) setDadosretorno(dadosExemplo)
-        }
+            setTipo('criar')
+            }
         load()
     }
 
@@ -119,14 +122,12 @@ function InputField({ id }: InputFieldProps) {
     }, [dadosRetorno])
 
     return (
-        <form className={`${tipo != "editar" ?' flex justify-center items-center w-full space-x-4 mb-2' :
-            'flex flex-col items-start justify-center'
-            }`}
+        <form className={`'flex flex-col items-start justify-center'}`}
             onSubmit={handleSubmit} >
             <Input label="Descrição" type="text" name="descriptio" {...description} />
             <Input label="Preço" type="number" name="price" {...price} />
             <Input label="Data" type="date" name="data" {...dataTransacao} />
-            <select title='Categorias' className={tipo == 'editar' ? 'h-10 rounded-md p-2 mb-4' : 'h-10 rounded-md p-2'} value={category || ''} onChange={(e) => setCategory(e.target.value)}>
+            <select title='Categorias' className={'h-10 rounded-md p-2'} value={category || ''} onChange={(e) => setCategory(e.target.value)}>
                 {categList.map((tipo: string, id: number) => (
                     <option key={id} value={tipo || ''}>
                         {tipo || ''}
@@ -134,14 +135,14 @@ function InputField({ id }: InputFieldProps) {
                 ))}
 
             </select>
-            <select title='Metodos de pagamento' className={tipo == 'editar' ? 'h-10 rounded-md p-2 mb-4' : 'h-10 rounded-md p-2'} value={metodoPagemento || ''} onChange={(e) => setMetodoPagamento(e.target.value)}>
+            <select title='Metodos de pagamento' className={'h-10 rounded-md p-2 mb-4'} value={metodoPagemento || ''} onChange={(e) => setMetodoPagamento(e.target.value)}>
                 {metodo.map((tipo: string, id: number) => (
                     <option key={id} value={tipo || ''}>
                         {tipo || ''}
                     </option>
                 ))}
             </select>
-            <select title='Tipo de transação' className={tipo == 'editar' ? 'h-10 rounded-md p-2 mb-4' : 'h-10 rounded-md p-2'} value={type || ''} onChange={(e) => setType(e.target.value)}>
+            <select title='Tipo de transação' className={'h-10 rounded-md p-2 mb-4'} value={type || ''} onChange={(e) => setType(e.target.value)}>
                 <option value="">Tipo transação</option>
                 {tipoList.map((tipo: string, id: number) => (
                     <option key={id} value={tipo || ''}>

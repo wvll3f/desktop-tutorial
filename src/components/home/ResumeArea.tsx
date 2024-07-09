@@ -1,5 +1,5 @@
 import React from 'react'
-import { Card, CardDescription, CardTitle } from './ui/card'
+import { Card, CardDescription, CardTitle } from '../ui/card'
 import { UserContext } from '@/context/UserStorage'
 
 function ResumeArea() {
@@ -7,7 +7,7 @@ function ResumeArea() {
     const {inflows,outflows,balance} = React.useContext(UserContext)
 
     return (
-        <div className='flex justify-center space-x-5 mb-6 bg-gray-100'>
+        <div className='flex justify-center space-x-5 mb-6'>
             <Card className=' w-1/6 flex flex-col justify-center items-center p-3'>
                 <CardTitle>Entradas</CardTitle>
                 {

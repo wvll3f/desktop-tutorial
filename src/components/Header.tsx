@@ -16,7 +16,7 @@ function Header() {
 
   return (
     <UserStorage>
-      <div className='bg-blue w-screen flex flex-row items-center justify-between px-4 font-bold text-gray-200 bg-gray-900 h-16'>
+      <div className='w-full flex flex-row items-center justify-between px-4 font-bold text-gray-200 bg-gray-900 h-16'>
         <h3 className='p-2 font-bold text-gray-200 text-3xl'>Finance</h3>
         <div className='flex items-center'>
         {data.username !== 'Login/Criar' ?

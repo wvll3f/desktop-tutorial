@@ -1,5 +1,5 @@
 import React from 'react'
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from './ui/table'
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../ui/table'
 import { Pen, Trash } from 'lucide-react'
 import { UserContext } from '@/context/UserStorage';
 
@@ -13,7 +13,8 @@ function TableComp() {
         setDadosretorno,
         setSelecionado,
         pegarTransacaoId,
-      } = React.useContext(UserContext);
+        setTipo
+    } = React.useContext(UserContext);
 
     return (
         <div>
@@ -50,6 +51,7 @@ function TableComp() {
                                         <Pen onClick={() => {
                                             const token = window.localStorage.getItem('accessToken') ?? "";
                                             const load = async () => {
+                                                setTipo('editar')
                                                 setEditModal(true)
                                                 setSelecionado(dados.id)
                                                 if (setDadosretorno) setDadosretorno(await pegarTransacaoId(token, dados.id))

@@ -19,6 +19,7 @@ interface UserContextProps {
   pegarTransacaoId: (token: string, id: number) => any;
   setBalance: React.Dispatch<React.SetStateAction<string>>;
   setEditModal: React.Dispatch<React.SetStateAction<boolean>>;
+  setCreateModal: React.Dispatch<React.SetStateAction<boolean>>;
   setDeleteModal: React.Dispatch<React.SetStateAction<boolean>>;
   setInflows: React.Dispatch<React.SetStateAction<string>>;
   setOutflows: React.Dispatch<React.SetStateAction<string>>;
@@ -34,6 +35,7 @@ interface UserContextProps {
   logado: boolean;
   editModal: boolean;
   deleteModal: boolean;
+  createModal:boolean;
   balance: string;
   inflows: string;
   outflows: string;
@@ -58,6 +60,7 @@ export const UserStorage: React.FC<UserStorageProps> = ({ children }) => {
   const [dadosRetorno, setDadosretorno] = React.useState({} as dadosInputField);
   const [deleteModal, setDeleteModal] = React.useState(false);
   const [editModal, setEditModal] = React.useState(false);
+  const [createModal, setCreateModal] = React.useState(false);
   const [selecionado, setSelecionado] = React.useState<number | null>(null);
   const navigate = useNavigate();
 
@@ -209,8 +212,10 @@ export const UserStorage: React.FC<UserStorageProps> = ({ children }) => {
       setDeleteModal,
       setEditModal,
       setSelecionado,
+      setCreateModal,
       selecionado,
       deleteModal,
+      createModal,
       editModal,
       dadosBusca,
       tipo,

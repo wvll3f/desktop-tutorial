@@ -1,19 +1,22 @@
 import { UserContext } from '@/context/UserStorage';
 import React from 'react'
-import { dadosExemplo } from './../types/userTypes';
+import { dadosExemplo } from '../../types/userTypes';
 import Modal from './Modal';
 
 interface modalType {
     remove?: (id: number) => void;
     edit?: (id: number) => void;
+    criar?: (id: number) => void;
 }
 
-function ModalArea( {remove, edit}:modalType ) {
+function ModalArea( {remove, edit, criar}:modalType ) {
 
     const {
         setDeleteModal,
         setEditModal,
         setDadosretorno,
+        setCreateModal,
+        createModal,
         selecionado,
         deleteModal,
         editModal,
@@ -30,6 +33,13 @@ function ModalArea( {remove, edit}:modalType ) {
                 open={deleteModal}
                 onClose={() => setDeleteModal(false)}
                 action={remove}
+            />
+            <Modal
+                selecionado={null}
+                type='criar'
+                open={createModal}
+                onClose={() => setCreateModal(false)}
+                action={criar}
             />
 
             <Modal
