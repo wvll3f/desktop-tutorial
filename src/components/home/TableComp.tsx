@@ -18,7 +18,7 @@ function TableComp() {
 
     return (
         <div>
-            <Table className='text-md border-solid border-2 min-w-[620px] border-gray-300'>
+            <Table className='text-md min-w-[620px]'>
                 <TableHeader className=''>
                     <TableRow className=''>
                         <TableHead className="text-center ">Data</TableHead>

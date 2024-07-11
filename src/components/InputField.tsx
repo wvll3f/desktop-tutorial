@@ -30,6 +30,7 @@ function InputField({ id }: InputFieldProps) {
         setOutflows,
         pegarEntradas,
         pegarSaidas,
+        setCreateModal,
         dadosRetorno,
     } = React.useContext(UserContext);
 
@@ -75,15 +76,15 @@ function InputField({ id }: InputFieldProps) {
 
         const load = async () => {
             if (token && id != 156484651894 && tipo == 'editar') {
-                editTrans(description.value, price.value, category, type, metodoPagemento, token, id||0);
+                await editTrans(description.value, price.value, category, type, metodoPagemento, token, id||0);
             }
             if (token && tipo == 'criar') {
                 if (description.validate() && price.validate() && category) {
-                    criarTrans(description.value, price.value, category, type, dataTransacao.value, metodoPagemento, token);
+                    await criarTrans(description.value, price.value, category, type, dataTransacao.value, metodoPagemento, token);
                 }
             }
-            setBalance(await pegarBalanco(startDate,endDate,token))
             setDadosBusca(await getTransByDate(startDate,endDate,token))
+            setBalance(await pegarBalanco(startDate,endDate,token))
             setInflows(await pegarEntradas(startDate,endDate,token))
             setOutflows(await pegarSaidas(startDate,endDate,token))
             description.setValue('')
@@ -92,9 +93,9 @@ function InputField({ id }: InputFieldProps) {
             setMetodoPagamento('')
             setType('')
             setCategory('');
-            setDadosBusca(await getTransByDate(startDate,endDate,token))
             setEditModal(false)
             setDeleteModal(false)
+            setCreateModal(false)
             if (setDadosretorno) setDadosretorno(dadosExemplo)
             setTipo('criar')
             }

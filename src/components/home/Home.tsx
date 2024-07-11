@@ -26,6 +26,7 @@ function Home() {
     setEditModal,
     setSelecionado,
     setCreateModal,
+    tipo,
     selecionado
   } = React.useContext(UserContext);
 
@@ -91,13 +92,14 @@ function Home() {
     setRangeMounth(mesAtual)
     window.localStorage.setItem('mes', mesAtual);
     const load = async () => {
+      setDadosBusca(await getTransByDate(startDate, endDate, token))
       setBalance(await pegarBalanco(startDate, endDate, token))
       setInflows(await pegarEntradas(startDate, endDate, token))
       setOutflows(await pegarSaidas(startDate, endDate, token))
-      setDadosBusca(await getTransByDate(startDate, endDate, token))
+      console.log('rodando')
     }
     load()
-  }, [mesAtual])
+  }, [tipo, mesAtual])
 
 
   return (
