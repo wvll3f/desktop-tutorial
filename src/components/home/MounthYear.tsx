@@ -7,7 +7,7 @@ import { UserContext } from '@/context/UserStorage';
 function MounthYear() {
 
     const { setRangeMounth, formatdate, getTransByDate, startDate, endDate, mesAtual, setMesAtual } = React.useContext(DateContext);
-    const { setDadosBusca } = React.useContext(UserContext);
+    const { setDadosBusca, setTipo } = React.useContext(UserContext);
 
     React.useEffect(() => {
         const token = window.localStorage.getItem('accessToken') || '';
@@ -19,31 +19,23 @@ function MounthYear() {
     }, [])
 
     const handlePrevMonth = () => {
-        const token = window.localStorage.getItem('accessToken') ?? "";
         let [year, month] = mesAtual.split('-')
         var newDate: any = new Date(parseInt(year), parseInt(month) - 1, 1);
         newDate.setMonth(newDate.getMonth() - 1);
         newDate = formatdate(newDate)
         setMesAtual(newDate)
         setRangeMounth(newDate)
-        const load = async () => {
-            setDadosBusca(await getTransByDate(startDate, endDate, token))
-        }
-        load()
+        setTipo('criar')
     }
 
     const handleNextMonth = () => {
-        const token = window.localStorage.getItem('accessToken') ?? "";
         let [year, month] = mesAtual.split('-')
         var newDate: any = new Date(parseInt(year), parseInt(month) - 1, 1);
         newDate.setMonth(newDate.getMonth() + 1);
         newDate = formatdate(newDate)
         setMesAtual(newDate)
         setRangeMounth(newDate)
-        const load = async () => {
-            setDadosBusca(await getTransByDate(startDate, endDate, token))
-        }
-        load()
+        setTipo('criar')
     }
 
     return (

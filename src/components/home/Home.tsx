@@ -99,7 +99,7 @@ function Home() {
       console.log('rodando')
     }
     load()
-  }, [tipo, mesAtual])
+  }, [mesAtual, tipo])
 
 
   return (
