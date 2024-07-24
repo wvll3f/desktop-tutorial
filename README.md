@@ -1,4 +1,13 @@
-# React + TypeScript + Vite
+
+# transations-control-api
+
+Aplicação fullstack para gerenciar finanças pessoais, tendo a possibilidade de criar, editar e excluir as suas transações mensais.
+
+
+## Demonstração
+
+<img src="https://i.imgur.com/KLYRRDe.gif" width="1024" height="576" />
+
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
@@ -28,3 +37,13 @@ export default {
 - Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
 - Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
 - Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+
+## Stack utilizada
+
+**Front-end:** React, typescript, TailwindCSS, shadcn ui
+
+**Back-end:** Java, Spring boot
+
+**Banco de dados:** mysql
+
+**infraestrutura:** apache2, docker
