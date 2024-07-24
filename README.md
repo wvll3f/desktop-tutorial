@@ -1,5 +1,5 @@
 
-# transations-control-api
+# transations-control-front
 
 Aplicação fullstack para gerenciar finanças pessoais, tendo a possibilidade de criar, editar e excluir as suas transações mensais.
 
@@ -46,4 +46,4 @@ export default {
 
 **Banco de dados:** mysql
 
-**infraestrutura:** apache2, docker
+**infraestrutura:**  Ubuntu server 22.04.4 LTS, apache2, docker
